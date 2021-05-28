@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dynamic-configs
+  namespace: traefik
+  annotations:
+    field.cattle.io/description: treafik动态配置。certs.yaml存储网站证书名称及路径，http.yaml设置http中间件。
+data:
+  certs.yaml: |-
+    tls:
+      certificates:
+        - certFile: /certs/1_wangzhan.crt
+          keyFile: /certs/2_wangzhan.key
+  http.yaml: |-
+    http:
+      middlewares:
+        a-redirectscheme:
+          redirectScheme:
+            scheme: https
+            permanent: true
+        b-auth:
+          basicAuth:
+            realm: "Please Login."
+            users:
+               - "admin:$apr1$oyibncqg$aKg03oDQ5z1YH6Gkv5rEK0"
+        c-allowHeader:
+          headers:
+            accessControlMaxAge: 12
+            accessControlAllowMethods:
+              - POST
+              - GET
+              - PUT
+              - DELETE
+            accessControlAllowHeaders:
+              - "*"
